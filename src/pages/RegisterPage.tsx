@@ -1,30 +1,50 @@
 import logo from "../assets/pizzel-logo.png";
 import Input from "../components/form-components/Input.tsx";
-import { useState } from "react";
-import axios from "axios";
+import { useEffect, useState } from "react";
+import axios, { AxiosError } from "axios";
+import { Link } from "react-router-dom";
+
+const initialForm = {
+  displayName: "",
+  email: "",
+  password: "",
+  confirmedPass: "",
+};
 
 const RegisterPage = () => {
-  const [form, setForm] = useState({
-    displayName: "",
-    email: "",
-    password: "",
-    confirmedPass: "",
-  });
-
+  const [form, setForm] = useState(initialForm);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    let verifError = "";
+    if (form.confirmedPass !== form.password)
+      verifError = "The confirmation password is not the same";
+    if (form.password.length < 8)
+      verifError = "Password must be larger than 8 letters";
+    if (!Object.values(form).every((inpVal) => inpVal))
+      verifError = "All fields are required";
+    setError(verifError);
+  }, [form]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const sendRegisterData = async () => {
-      return;
+      const userToken = await axios
+        .post("http://localhost:3000/user", {
+          name: form.displayName,
+          email: form.email,
+          password: form.confirmedPass,
+        })
+        .then((res) => res.data.token)
+        .catch((err) => setError(err.message))
+        .then(() => setForm(initialForm));
+      // TODO: Pasarlo al Contexto de la App
+
+      console.log(userToken);
     };
 
-    if (!Object.values(form).every((inpVal) => inpVal)) {
-      setError(() => "All fields are required");
-    }
-
-    console.log("Sended");
+    !error && sendRegisterData();
   };
 
   return (
@@ -50,16 +70,17 @@ const RegisterPage = () => {
             type="email"
             label="Email Address"
             placeholder="email"
+            autocomplete="email"
             value={form.email}
             onChange={(e) => {
               setForm((f) => ({ ...f, email: e.target.value }));
             }}
           />
-          {/* TODO: El password debe ser mayor a 8 chars */}
           <Input
             type="password"
             label="Password"
             placeholder="password"
+            autocomplete="new-password"
             value={form.password}
             onChange={(e) => {
               setForm((f) => ({ ...f, password: e.target.value }));
@@ -69,6 +90,7 @@ const RegisterPage = () => {
             type="password"
             label="Confirm Password"
             placeholder="confirm password"
+            autocomplete="new-password"
             value={form.confirmedPass}
             onChange={(e) => {
               setForm((f) => ({ ...f, confirmedPass: e.target.value }));
@@ -89,6 +111,10 @@ const RegisterPage = () => {
             x
           </button>
         </div>
+        {/* TODO:  Agregar Redux */}
+        <p>
+          You already have an Account? <Link to="/login">Log In</Link>
+        </p>
       </div>
     </div>
   );
