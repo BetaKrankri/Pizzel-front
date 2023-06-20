@@ -19,6 +19,12 @@ const LoginPage: React.FC = () => {
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (authCtx?.loggedUser) {
+      navigate("/");
+    }
+  }, [authCtx?.loggedUser, navigate]);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const sendLoginData = async () => {
@@ -28,9 +34,11 @@ const LoginPage: React.FC = () => {
           password: form.password,
         })
         .then((res) => {
-          const { token } = res.data;
-          authCtx?.setLogedUser(() => ({ token: token, email: form.email }));
-          console.log(token);
+          const newLoggedUser = res.data;
+          newLoggedUser.email = form.email;
+          authCtx?.setLoggedUser(() => ({ ...newLoggedUser }));
+          localStorage.setItem("loggedUser", JSON.stringify(newLoggedUser));
+          console.log(newLoggedUser);
           navigate("/");
         })
         .catch((error) => {
@@ -39,8 +47,6 @@ const LoginPage: React.FC = () => {
             setError("");
           }, 3000);
         });
-
-      // TODO: Pasarlo al Contexto de la App
     };
 
     if (Object.values(form).every((inpVal) => inpVal) && !error) {

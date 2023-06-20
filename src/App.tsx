@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import EditorPage from "./pages/EditorPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import RegisterPage from "./pages/RegisterPage.tsx";
@@ -9,6 +9,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { AuthContext } from "./contexts/AuthContext.tsx";
+import ErrorPage from "./pages/error-page.tsx";
 
 function App() {
   const authCtx = useContext(AuthContext);
@@ -16,7 +17,7 @@ function App() {
   const AuthProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
     children,
   }) => (
-    <>{authCtx?.logedUser?.token ? children : <Navigate to={"/login"} />}</>
+    <>{authCtx?.loggedUser?.token ? children : <Navigate to={"/login"} />}</>
   );
 
   return (
@@ -32,6 +33,8 @@ function App() {
         />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<RegisterPage />} />
+
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
     </Router>
   );

@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 interface User {
   token: string;
@@ -7,8 +7,8 @@ interface User {
 }
 
 interface IAuthContext {
-  logedUser: User | undefined;
-  setLogedUser: React.Dispatch<React.SetStateAction<User | undefined>>;
+  loggedUser: User | undefined;
+  setLoggedUser: React.Dispatch<React.SetStateAction<User | undefined>>;
 }
 
 export const AuthContext = createContext<IAuthContext | undefined>(undefined);
@@ -16,9 +16,15 @@ export const AuthContext = createContext<IAuthContext | undefined>(undefined);
 export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [logedUser, setLogedUser] = useState<User | undefined>(undefined);
+  const [loggedUser, setLoggedUser] = useState<User | undefined>(undefined);
 
-  const AuthCtxVal: IAuthContext = { logedUser, setLogedUser };
+  useEffect(() => {
+    const storedUser = localStorage.getItem("loggedUser");
+    storedUser && setLoggedUser(() => JSON.parse(storedUser));
+  }, []);
+  // TODO: Hacer que persista el usuario incluso al recargar la pestaña. Usando localStorage
+
+  const AuthCtxVal: IAuthContext = { loggedUser, setLoggedUser };
 
   return (
     <AuthContext.Provider value={AuthCtxVal}>{children}</AuthContext.Provider>
