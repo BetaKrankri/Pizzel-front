@@ -1,8 +1,9 @@
 import logo from "../assets/pizzel-logo.png";
 import Input from "../components/form-components/Input.tsx";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../contexts/AuthContext.tsx";
 
 interface FormData {
   displayName: string;
@@ -22,6 +23,9 @@ const RegisterPage = () => {
   const [form, setForm] = useState<FormData>(initialForm);
   const [error, setError] = useState<string>("");
 
+  const authCtx = useContext(AuthContext);
+  const navigate = useNavigate();
+
   useEffect(() => {
     let verifError = "";
     if (form.confirmedPass !== form.password)
@@ -37,18 +41,29 @@ const RegisterPage = () => {
     e.preventDefault();
 
     const sendRegisterData = async () => {
-      const userToken = await axios
+      await axios
         .post("http://localhost:3000/user", {
           name: form.displayName,
           email: form.email,
           password: form.confirmedPass,
         })
-        .then((res) => res.data.token)
-        .catch((err) => setError(err.message))
-        .then(() => setForm(initialForm));
+        .then((res) => {
+          const { token } = res.data;
+          authCtx?.setLogedUser(() => ({
+            token: token,
+            displayName: form.displayName,
+            email: form.email,
+          }));
+          navigate("/");
+          console.log(token);
+        })
+        .catch((err) => {
+          setError(err.message);
+          setTimeout(() => {
+            setError("");
+          }, 3000);
+        });
       // TODO: Pasarlo al Contexto de la App
-
-      console.log(userToken);
     };
 
     !error && sendRegisterData();
@@ -56,7 +71,7 @@ const RegisterPage = () => {
 
   return (
     <div className="RegisterPage w-full h-screen flex justify-center ">
-      <div className="Wrapper w-4/12 flex flex-col items-center py-12 gap-6 relative">
+      <div className="Wrapper max-w-lg w-4/12 flex flex-col items-center py-12 gap-6 relative">
         <img src={logo} alt="logo" className="w-20" />
         <p className="text-xl">Log in to Pizzel</p>
         <form

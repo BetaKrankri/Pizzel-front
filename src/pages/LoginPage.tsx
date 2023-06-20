@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import logo from "../assets/pizzel-logo.png";
 import Input from "../components/form-components/Input.tsx";
-import axios from "axios";
-import { Link } from "react-router-dom";
+import axios, { AxiosError } from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../contexts/AuthContext.tsx";
 
 interface FormData {
   email: string;
@@ -15,30 +16,41 @@ const LoginPage: React.FC = () => {
   const [form, setForm] = useState<FormData>(initialForm);
   const [error, setError] = useState<string>("");
 
+  const authCtx = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     const sendLoginData = async () => {
-      const userToken = await axios
+      await axios
         .post("http://localhost:3000/login", {
           email: form.email,
           password: form.password,
         })
-        .then((res) => res.data.token)
-        .catch((err) => setError(err.message))
-        .then(() => setForm(initialForm));
+        .then((res) => {
+          const { token } = res.data;
+          authCtx?.setLogedUser(() => ({ token: token, email: form.email }));
+          console.log(token);
+          navigate("/");
+        })
+        .catch((error) => {
+          setError(error.message);
+          setTimeout(() => {
+            setError("");
+          }, 3000);
+        });
+
       // TODO: Pasarlo al Contexto de la App
-      console.log(userToken);
     };
 
-    if (Object.values(form).every((inpVal) => inpVal)) {
+    if (Object.values(form).every((inpVal) => inpVal) && !error) {
       sendLoginData();
     }
   };
 
   return (
     <div className="LoginPage w-full h-screen flex justify-center ">
-      <div className=" w-4/12 flex flex-col items-center py-12 gap-6">
+      <div className="Wrapper max-w-lg w-4/12 flex flex-col items-center py-12 gap-6">
         <img src={logo} alt="logo" className="w-20" />
         <p className="text-xl">Log in to Pizzel</p>
         <form
