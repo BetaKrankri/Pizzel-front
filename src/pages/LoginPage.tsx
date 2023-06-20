@@ -1,14 +1,19 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../assets/pizzel-logo.png";
 import Input from "../components/form-components/Input.tsx";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
+interface FormData {
+  email: string;
+  password: string;
+}
+
 const initialForm = { email: "", password: "" };
 
-const LoginPage = () => {
-  const [form, setForm] = useState(initialForm);
-  const [error, setError] = useState("");
+const LoginPage: React.FC = () => {
+  const [form, setForm] = useState<FormData>(initialForm);
+  const [error, setError] = useState<string>("");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

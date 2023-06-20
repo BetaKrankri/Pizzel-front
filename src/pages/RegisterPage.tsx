@@ -4,6 +4,13 @@ import { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { Link } from "react-router-dom";
 
+interface FormData {
+  displayName: string;
+  email: string;
+  password: string;
+  confirmedPass: string;
+}
+
 const initialForm = {
   displayName: "",
   email: "",
@@ -12,8 +19,8 @@ const initialForm = {
 };
 
 const RegisterPage = () => {
-  const [form, setForm] = useState(initialForm);
-  const [error, setError] = useState("");
+  const [form, setForm] = useState<FormData>(initialForm);
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     let verifError = "";
