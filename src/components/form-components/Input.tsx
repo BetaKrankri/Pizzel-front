@@ -1,7 +1,7 @@
 import React from "react";
 
 interface InputProps {
-  label: string;
+  label?: string;
   type: "text" | "password" | "email";
   value: string | number | readonly string[];
   placeholder?: string;
@@ -15,7 +15,7 @@ const Input: React.FC<InputProps> = (props) => {
   return (
     <div>
       <label className={` flex flex-col gap-2 ${props.labelStyle}`}>
-        <p>{props.label}</p>
+        {props.label && <p>{props.label}</p>}
         <input
           type={props.type}
           value={props.value}

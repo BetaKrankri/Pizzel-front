@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import logo from "../assets/pizzel-logo.png";
 import Input from "../components/form-components/Input.tsx";
-import axios, { AxiosError } from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext.tsx";
+import { loginUser } from "../utils/api.tsx";
 
 interface FormData {
   email: string;
@@ -27,26 +27,20 @@ const LoginPage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     const sendLoginData = async () => {
-      await axios
-        .post("http://localhost:3000/login", {
-          email: form.email,
-          password: form.password,
-        })
-        .then((res) => {
-          const newLoggedUser = res.data;
-          newLoggedUser.email = form.email;
-          authCtx?.setLoggedUser(() => ({ ...newLoggedUser }));
-          localStorage.setItem("loggedUser", JSON.stringify(newLoggedUser));
-          console.log(newLoggedUser);
-          navigate("/");
-        })
-        .catch((error) => {
-          setError(error.message);
-          setTimeout(() => {
-            setError("");
-          }, 3000);
-        });
+      try {
+        const newLoggedUser = await loginUser(form);
+        newLoggedUser.email = form.email;
+        authCtx?.setLoggedUser(() => ({ ...newLoggedUser }));
+        localStorage.setItem("loggedUser", JSON.stringify(newLoggedUser));
+        console.log(newLoggedUser);
+        navigate("/");
+      } catch (error) {
+        console.error(error);
+        setError(error?.data || error?.message);
+        setTimeout(() => setError(""), 3000);
+      }
     };
 
     if (Object.values(form).every((inpVal) => inpVal) && !error) {

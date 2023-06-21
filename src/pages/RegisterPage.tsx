@@ -1,9 +1,9 @@
 import logo from "../assets/pizzel-logo.png";
 import Input from "../components/form-components/Input.tsx";
 import { useContext, useEffect, useState } from "react";
-import axios, { AxiosError } from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext.tsx";
+import { createPortfolio, createUser } from "../utils/api.tsx";
 
 interface FormData {
   displayName: string;
@@ -26,6 +26,7 @@ const RegisterPage = () => {
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
 
+  // Verificador del formulario
   useEffect(() => {
     let verifError = "";
     if (form.confirmedPass !== form.password)
@@ -40,40 +41,33 @@ const RegisterPage = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const sendRegisterData = async () => {
-      await axios
-        .post("http://localhost:3000/user", {
-          name: form.displayName,
-          email: form.email,
-          password: form.confirmedPass,
-        })
-        .then((res) => {
-          const { token } = res.data;
-          authCtx?.setLogedUser(() => ({
-            token: token,
-            displayName: form.displayName,
-            email: form.email,
-          }));
-          navigate("/");
-          console.log(token);
-        })
-        .catch((err) => {
-          setError(err.message);
-          setTimeout(() => {
-            setError("");
-          }, 3000);
-        });
-      // TODO: Pasarlo al Contexto de la App
+    const signUpNewUser = async () => {
+      try {
+        const newUser = await createUser(form);
+        newUser.displayName = form.displayName;
+        newUser.email = form.email;
+        const rootPortfolio = await createPortfolio(newUser, "root");
+        newUser.portfolios = [rootPortfolio];
+        authCtx?.setLoggedUser(() => newUser);
+        localStorage.setItem("loggedUser", JSON.stringify(newUser));
+        navigate("/");
+        console.log(newUser);
+      } catch (error) {
+        // setError(error?.message || error?.data);
+        setTimeout(() => {
+          setError("");
+        }, 3000);
+      }
     };
 
-    !error && sendRegisterData();
+    !error && signUpNewUser();
   };
 
   return (
     <div className="RegisterPage w-full h-screen flex justify-center ">
       <div className="Wrapper max-w-lg w-4/12 flex flex-col items-center py-12 gap-6 relative">
         <img src={logo} alt="logo" className="w-20" />
-        <p className="text-xl">Log in to Pizzel</p>
+        <p className="text-xl">Sign up to Pizzel</p>
         <form
           onSubmit={handleSubmit}
           className=" w-full flex flex-col p-6 gap-4 rounded bg-stone-900 "

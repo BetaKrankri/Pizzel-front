@@ -1,12 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
+import { User } from "../utils/api";
 
-interface User {
-  token: string;
-  displayName?: string;
-  email?: string;
-}
-
-interface IAuthContext {
+export interface IAuthContext {
   loggedUser: User | undefined;
   setLoggedUser: React.Dispatch<React.SetStateAction<User | undefined>>;
 }
