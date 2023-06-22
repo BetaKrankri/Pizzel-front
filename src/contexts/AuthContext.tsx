@@ -14,10 +14,15 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
   const [loggedUser, setLoggedUser] = useState<User | undefined>(undefined);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("loggedUser");
-    storedUser && setLoggedUser(() => JSON.parse(storedUser));
+    if (!loggedUser) {
+      const storedUser = localStorage.getItem("loggedUser");
+      storedUser && setLoggedUser(() => JSON.parse(storedUser));
+    }
   }, []);
-  // TODO: Hacer que persista el usuario incluso al recargar la pestaña. Usando localStorage
+
+  useEffect(() => {
+    console.log("AuthContext > loggedUser : updates  =>", loggedUser);
+  }, [loggedUser]);
 
   const AuthCtxVal: IAuthContext = { loggedUser, setLoggedUser };
 

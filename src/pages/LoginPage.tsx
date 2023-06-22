@@ -20,7 +20,7 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (authCtx?.loggedUser) {
+    if (authCtx?.loggedUser && localStorage.getItem("loggedUser")) {
       navigate("/");
     }
   }, [authCtx?.loggedUser, navigate]);
@@ -34,7 +34,7 @@ const LoginPage: React.FC = () => {
         newLoggedUser.email = form.email;
         authCtx?.setLoggedUser(() => ({ ...newLoggedUser }));
         localStorage.setItem("loggedUser", JSON.stringify(newLoggedUser));
-        console.log(newLoggedUser);
+        // console.log(newLoggedUser);
         navigate("/");
       } catch (error) {
         console.error(error);

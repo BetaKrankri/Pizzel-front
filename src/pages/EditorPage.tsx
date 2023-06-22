@@ -1,23 +1,29 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-import { TestAPI } from "../components/TestAPI";
+import { useNavigate } from "react-router-dom";
 
 const EditorPage: React.FunctionComponent = () => {
   const authCtx = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!authCtx?.loggedUser && !localStorage.getItem("loggedUser")) {
+      navigate("/login");
+    }
+  }, [authCtx?.loggedUser, navigate]);
 
   return (
     <div className="w-full h-screen flex flex-col items-center gap-4">
       This is the Editor Page
       <button
-        className="bg-stone-800 p-4 ring ring-stone-400"
+        className="bg-emerald-800 p-2 ring ring-stone-400 w-fit"
         onClick={() => {
           localStorage.removeItem("loggedUser");
           authCtx?.setLoggedUser(() => undefined);
         }}
       >
-        Cerrar sesion
+        Logout
       </button>
-      <TestAPI />
     </div>
   );
 };
