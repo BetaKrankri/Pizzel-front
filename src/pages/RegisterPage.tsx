@@ -50,7 +50,7 @@ const RegisterPage = () => {
         newUser.portfolios = [rootPortfolio];
         authCtx?.setLoggedUser(() => newUser);
         localStorage.setItem("loggedUser", JSON.stringify(newUser));
-        navigate("/");
+        navigate("/editor");
         console.log(newUser);
       } catch (error) {
         // setError(error?.message || error?.data);

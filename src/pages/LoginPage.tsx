@@ -21,7 +21,7 @@ const LoginPage: React.FC = () => {
 
   useEffect(() => {
     if (authCtx?.loggedUser && localStorage.getItem("loggedUser")) {
-      navigate("/");
+      navigate("/editor");
     }
   }, [authCtx?.loggedUser, navigate]);
 
@@ -35,7 +35,7 @@ const LoginPage: React.FC = () => {
         authCtx?.setLoggedUser(() => ({ ...newLoggedUser }));
         localStorage.setItem("loggedUser", JSON.stringify(newLoggedUser));
         // console.log(newLoggedUser);
-        navigate("/");
+        navigate("/editor");
       } catch (error) {
         console.error(error);
         setError(error?.data || error?.message);
