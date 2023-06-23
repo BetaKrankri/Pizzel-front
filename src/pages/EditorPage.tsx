@@ -20,12 +20,7 @@ const EditorPage: React.FunctionComponent = () => {
   return (
     <div className="EditorPage w-full h-screen flex flex-col items-center gap-4 relative">
       {/* Menu */}
-      {appCtx?.isMenuActive && (
-        <div className="FogBackground absolute z-10 w-full h-full bg-stone-500/20 flex justify-center items-center">
-          {/* TODO: Cerrar ventana de menu al onClick en el FogBackground */}
-          <Menu />
-        </div>
-      )}
+      <Menu />
       <div className="Topbar flex justify-between items-center bg-slate-900 w-full px-4 py-2">
         <button
           className="hover:bg-slate-700 active:ring-1 ring-slate-400 p-1 rounded-sm"

@@ -6,7 +6,7 @@ const CanvasButton: React.FC<{ canvas: Canvas | undefined }> = ({ canvas }) => {
   return (
     <button
       className={`CanvasButton flex py-2 px-3 items-center justify-between
-       bg-slate-800 hover:bg-slate-700 rounded border-b border-b-slate-900 shadow-lg`}
+       bg-slate-800 hover:bg-slate-700 rounded border-b border-b-slate-900 shadow`}
     >
       <div className="flex w-full  gap-3 ">
         <div className="flex justify-center items-center bg-slate-950 rounded">
