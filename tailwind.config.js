@@ -11,6 +11,7 @@ export default {
     },
   },
   plugins: [
+    require("tailwind-scrollbar-hide"),
     require("@tailwindcss/forms")({
       strategy: "base", // only generate global styles
     }),
