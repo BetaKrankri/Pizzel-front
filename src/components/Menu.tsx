@@ -2,8 +2,8 @@ import { useState } from "react";
 import TabButton from "./form-components/TabButton";
 import ErrorPage from "../pages/ErrorPage";
 import FilesForm from "./form-components/FilesForm";
-import ProfileForm from "./ProfileForm";
-import NewCanvaForm from "./NewCanvaForm";
+import ProfileForm from "./form-components/ProfileForm";
+import NewCanvaForm from "./form-components/NewCanvaForm";
 import RecentsForm from "./form-components/RecentsForm";
 
 const TABS = {
@@ -37,8 +37,8 @@ const Menu = () => {
   };
 
   return (
-    <div className="Menu rounded overflow-hidden flex ">
-      <div className="Tab flex flex-col bg-slate-950 h-full">
+    <div className="Menu rounded overflow-hidden flex shadow-xl transition-all">
+      <div className="Tab flex flex-col bg-slate-950">
         {Object.entries(TABS).map((tab) => (
           <TabButton
             key={tab[0]}
@@ -50,7 +50,7 @@ const Menu = () => {
           />
         ))}
       </div>
-      <div className="MenuForm">{renderMenuForm()}</div>
+      {renderMenuForm()}
     </div>
   );
 };

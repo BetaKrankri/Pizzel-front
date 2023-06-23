@@ -21,7 +21,7 @@ const EditorPage: React.FunctionComponent = () => {
     <div className="EditorPage w-full h-screen flex flex-col items-center gap-4 relative">
       {/* Menu */}
       {appCtx?.isMenuActive && (
-        <div className="FogBackground absolute z-10 w-full h-full bg-stone-800/50 flex justify-center items-center">
+        <div className="FogBackground absolute z-10 w-full h-full bg-stone-500/20 flex justify-center items-center">
           {/* TODO: Cerrar ventana de menu al onClick en el FogBackground */}
           <Menu />
         </div>
