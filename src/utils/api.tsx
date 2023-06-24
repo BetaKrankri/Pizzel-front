@@ -29,7 +29,7 @@ export interface Portfolio {
 export async function getAllPortfolios(
   user: User | undefined
 ): Promise<Portfolio[]> {
-  if (!user?.email) throw new Error("No email provided");
+  if (!user?.email) return [];
   const userPortfolios = await axios
     .get("http://localhost:3000/api/portfolio", {
       headers: { Authorization: `Bearer ${user?.token}` },
@@ -37,7 +37,9 @@ export async function getAllPortfolios(
     })
     .then((res) => res.data.data)
     .catch((error) => {
-      throw new Error(error);
+      console.error(error);
+      return [];
+      // throw new Error(error);
     });
 
   return userPortfolios;
@@ -124,7 +126,9 @@ export async function getAllCanvases(
     })
     .then((res) => res.data.data)
     .catch((error) => {
-      throw new Error(error);
+      console.error(error);
+      return [];
+      // throw new Error(error);
     });
   return allCanvases;
 }

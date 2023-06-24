@@ -2,7 +2,7 @@ import React from "react";
 import verticalDots from "../../assets/verticalDots.png";
 import { Canvas } from "../../utils/api";
 
-const CanvasButton: React.FC<{ canvas: Canvas | undefined }> = ({ canvas }) => {
+const CanvasButton: React.FC<{ canvas: Canvas }> = ({ canvas }) => {
   return (
     <button
       className={`CanvasButton flex py-2 px-3 items-center justify-between
@@ -18,7 +18,7 @@ const CanvasButton: React.FC<{ canvas: Canvas | undefined }> = ({ canvas }) => {
             {canvas?.name || "Canvas name"}
           </p>
           <p className="text-xs font-jost">
-            {getUpdateStatus(canvas?.updatedAt)}
+            {getYMDHMFormat(canvas?.updatedAt)}
           </p>
         </div>
       </div>
@@ -30,25 +30,27 @@ const CanvasButton: React.FC<{ canvas: Canvas | undefined }> = ({ canvas }) => {
   );
 };
 
-// TODO: updated last month, updated last week, updated yesterday, updated today
-function getUpdateStatus(date: Date | undefined): string {
-  if (!date) {
-    return "No date provided";
-  }
-
+function getUpdateStatusString(dateString: Date): string {
   const today = new Date();
+  const date = new Date(dateString);
   const diffTime = Math.abs(today.getTime() - date.getTime());
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60));
 
-  if (diffDays >= 30) {
+  if (diffDays >= 24 * 30) {
     return "updated last month";
-  } else if (diffDays >= 7) {
+  } else if (diffDays >= 24 * 7) {
     return "updated last week";
-  } else if (diffDays === 1) {
+  } else if (diffDays >= 24) {
     return "updated yesterday";
   } else {
     return "updated today";
   }
+}
+
+function getYMDHMFormat(dateString: Date): string {
+  const date = new Date(dateString);
+
+  return `${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
 }
 
 export default CanvasButton;

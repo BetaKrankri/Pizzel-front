@@ -12,7 +12,7 @@ const EditorPage: React.FunctionComponent = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!authCtx?.loggedUser && !localStorage.getItem("loggedUser")) {
+    if (!authCtx?.loggedUser.token && !localStorage.getItem("loggedUser")) {
       navigate("/login");
     }
   }, [authCtx?.loggedUser, navigate]);
