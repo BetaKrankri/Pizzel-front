@@ -5,6 +5,7 @@ interface SelectProps {
   label?: string;
   labelStyle?: string;
   selectStyle?: string;
+  required?: boolean;
   onChange: React.ChangeEventHandler<HTMLSelectElement> | undefined;
   options: string[] | undefined;
 }
@@ -14,6 +15,7 @@ const Select: React.FC<SelectProps> = (props) => {
     <label className={`Select flex flex-col gap-1 ${props.labelStyle} w-full`}>
       {props.label && <p>{props.label}</p>}
       <select
+        required={props.required}
         value={props.value}
         className={`gap rounded-md px-4 py-2 bg-stone-700 ring-stone-600
         active:ring-stone-800 w-full ${props.selectStyle}`}

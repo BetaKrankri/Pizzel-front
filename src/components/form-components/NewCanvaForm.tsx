@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Input from "./Input";
 import Select from "./Select";
+import { Portfolio, getAllPortfolios } from "../../utils/api";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const PRESETS_SIZES = [
   { w: 16, h: 16 },
@@ -13,15 +15,33 @@ const PRESETS_SIZES = [
 ];
 
 function NewCanvasForm() {
+  const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
   const [form, setForm] = useState<{
     canvasName: string;
     width: number;
     height: number;
+    portfolio: any;
   }>({
     canvasName: "",
     width: 16,
     height: 16,
+    portfolio: "",
   });
+  const authCtx = useContext(AuthContext);
+
+  useEffect(() => {
+    const getPortfoliosOptionsList = async () => {
+      const usersPortfolios = await getAllPortfolios(authCtx?.loggedUser);
+      setPortfolios(usersPortfolios);
+    };
+
+    getPortfoliosOptionsList();
+  }, []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // TODO: Agregar canvas
+  };
 
   return (
     <div className="NewCanvasForm bg-slate-800 w-full h-full flex flex-col gap-3 p-3 transition-all">
@@ -32,6 +52,7 @@ function NewCanvasForm() {
       <form
         className={`Wrapper min-h-[200px] overflow-auto w-80
        scrollbar-hide scroll-smooth flex flex-col gap-3 shadow font-jost`}
+        onSubmit={handleSubmit}
       >
         <Input
           type="text"
@@ -39,6 +60,7 @@ function NewCanvasForm() {
           label="Title"
           labelStyle=""
           placeholder="a fancy canvas name"
+          required
           onChange={(e) =>
             setForm((f) => ({ ...f, canvasName: e.target.value }))
           }
@@ -52,6 +74,7 @@ function NewCanvasForm() {
             placeholder="16"
             min={4}
             max={300}
+            required
             onChange={(e) => {
               const w =
                 Number(e.target.value) > 300
@@ -71,6 +94,7 @@ function NewCanvasForm() {
             placeholder="16"
             min={4}
             max={300}
+            required
             onChange={(e) => {
               const w =
                 Number(e.target.value) > 300
@@ -88,8 +112,9 @@ function NewCanvasForm() {
         <div className="flex flex-col gap-1">
           <p>Presets</p>
           <div className="w-full overflow-x-auto flex gap-2 scrollbar-hide">
-            {PRESETS_SIZES.map((ps) => (
+            {PRESETS_SIZES.map((ps, i) => (
               <button
+                key={i}
                 className="p-4 bg-stone-700 rounded w-40 hover:border-stone-500 border-stone-700 border"
                 onClick={(e) => {
                   e.preventDefault();
@@ -104,10 +129,17 @@ function NewCanvasForm() {
 
         {/* TODO: Obtener las opciones de portafolio */}
         <Select
+          required
           label="Select Portfolio"
-          options={["portfolio1", "portfolio1", "portfolio1"]}
-          onChange={() => {}}
+          options={portfolios.map((portfolio) => portfolio.name)}
+          onChange={(e) => {
+            console.log(e.target.value);
+          }}
         />
+        <div />
+        <button className="p-4 rounded bg-amber-900 border-amber-900 border hover:bg-amber-800 active:border-amber-500 ">
+          Create Canvas
+        </button>
       </form>
     </div>
   );
