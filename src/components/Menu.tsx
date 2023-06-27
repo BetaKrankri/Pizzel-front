@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import TabButton from "./form-components/TabButton";
 import ErrorPage from "../pages/ErrorPage";
 import FilesForm from "./form-components/FilesForm";
@@ -6,6 +6,9 @@ import ProfileForm from "./form-components/ProfileForm";
 import NewCanvasForm from "./form-components/NewCanvaForm";
 import RecentsForm from "./form-components/RecentsForm";
 import { AppContext } from "../contexts/AppContext";
+import { useNavigate } from "react-router-dom";
+import { getAllPortfolios } from "../utils/api";
+import { AuthContext } from "../contexts/AuthContext";
 
 const TABS = {
   files: "Files",
@@ -17,6 +20,19 @@ const TABS = {
 const Menu = () => {
   const [selectedTab, setSelectedTab] = useState<keyof typeof TABS>("files");
   const appCtx = useContext(AppContext);
+  const authCtx = useContext(AuthContext);
+  //
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const syncPortfolios = () => {
+      getAllPortfolios(authCtx?.loggedUser).then((portfolios) => {
+        authCtx?.updateLoggedUser((lu) => ({ ...lu, portfolios: portfolios }));
+      });
+    };
+
+    syncPortfolios();
+  }, []);
 
   const renderMenuForm = () => {
     switch (selectedTab) {
@@ -39,40 +55,44 @@ const Menu = () => {
   };
 
   return (
-    <>
-      {appCtx?.isMenuActive && (
-        <div
-          className="FogBackground absolute z-10 w-full h-full bg-stone-500/20 flex justify-center items-center"
-          //
-          // TODO: ** Quitar este onClick y ponerlo en un boton a fuera del menu ....
-          //
-          onClick={() => {
-            appCtx?.setIsMenuActive(false);
-          }}
-        >
-          <div
-            className="Menu rounded overflow-hidden flex shadow-xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="Tab flex flex-col bg-slate-950">
-              {Object.entries(TABS).map((tab) => (
-                <TabButton
-                  key={tab[0]}
-                  label={tab[1]}
-                  isActive={selectedTab === tab[0]}
-                  onClick={() => {
-                    setSelectedTab(tab[0] as keyof typeof TABS);
-                  }}
-                />
-              ))}
-            </div>
-            <div className="Form  ">
-              <div className="h-full w-full ">{renderMenuForm()}</div>
-            </div>
-          </div>
+    <div
+      className="FogBackground absolute z-10 w-full h-full bg-stone-500/20 flex justify-center items-center"
+      //
+      // TODO: ** Quitar este onClick y ponerlo en un boton a fuera del menu ....
+      //
+      onClick={() => {
+        appCtx?.setIsMenuActive(false);
+      }}
+    >
+      <div
+        className="Menu rounded overflow-hidden flex shadow-xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="Tab flex flex-col bg-slate-950">
+          {Object.entries(TABS).map((tab) => (
+            <TabButton
+              key={tab[0]}
+              label={tab[1]}
+              isActive={selectedTab === tab[0]}
+              onClick={() => {
+                setSelectedTab(tab[0] as keyof typeof TABS);
+              }}
+            />
+          ))}
+          {/* /// */}
+          <TabButton
+            label={"Tester Page"}
+            isActive={false}
+            onClick={() => {
+              navigate("/test");
+            }}
+          />
         </div>
-      )}
-    </>
+        <div className="Form  ">
+          <div className="h-full w-full ">{renderMenuForm()}</div>
+        </div>
+      </div>
+    </div>
   );
 };
 
