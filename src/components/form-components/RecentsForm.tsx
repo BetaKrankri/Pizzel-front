@@ -1,27 +1,23 @@
-import { useContext, useEffect, useState } from "react";
-import { getAllCanvases, Canvas } from "../../utils/api";
+import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import CanvasButton from "./CanvasButton";
 
 const N_LAST_RECENTS = 5;
 
 const RecentsForm: React.FC = () => {
-  const [lastCanvases, setLastCanvases] = useState<Canvas[]>([]);
   const authCtx = useContext(AuthContext);
 
-  useEffect(() => {
-    const searchLastCanvases = async () => {
-      const usersCanvases = await getAllCanvases(authCtx?.loggedUser);
-      usersCanvases.sort((ca, cb) => {
-        const dateA = new Date(ca.updatedAt);
-        const dateB = new Date(cb.updatedAt);
-        return dateB.getTime() - dateA.getTime();
-      });
-      const lastCvs = usersCanvases.splice(0, N_LAST_RECENTS);
-      setLastCanvases(() => lastCvs);
-    };
-    searchLastCanvases();
-  }, [authCtx?.loggedUser]);
+  ///// Obtiene los ultimos canvases usando la informacion del contexto
+  const usersPortfolios = authCtx?.loggedUser.portfolios;
+  const allCanvases = usersPortfolios
+    ?.map((portfolio) => portfolio.canvases)
+    .flat();
+  allCanvases?.sort((ca, cb) => {
+    const dateA = new Date(ca.updatedAt);
+    const dateB = new Date(cb.updatedAt);
+    return dateB.getTime() - dateA.getTime();
+  });
+  const lastCvs = allCanvases?.splice(0, N_LAST_RECENTS);
 
   return (
     <div className="RecentsForm bg-slate-800 w-full h-full flex flex-col gap-3 p-3 transition-all duration-500">
@@ -33,7 +29,7 @@ const RecentsForm: React.FC = () => {
         className={`Wrapper w-80 max-h-96 min-h-[200px] overflow-auto
        scrollbar-hide scroll-smooth flex flex-col gap-3 shadow`}
       >
-        {lastCanvases.map((canvas) => (
+        {lastCvs?.map((canvas) => (
           <CanvasButton canvas={canvas} key={canvas.id} />
         ))}
       </div>
@@ -42,3 +38,24 @@ const RecentsForm: React.FC = () => {
 };
 
 export default RecentsForm;
+/*
+   ///// Obtiene los ultimos canvases usando la funcion del servidor y la almacena en un estado. 
+   
+   
+    const [lastCanvases, setLastCanvases] = useState<Canvas[]>([]);
+    useEffect(() => {
+      const searchLastCanvases = async () => {
+        const usersCanvases = await getAllCanvases(authCtx?.loggedUser);
+        usersCanvases.sort((ca, cb) => {
+          const dateA = new Date(ca.updatedAt);
+          const dateB = new Date(cb.updatedAt);
+          return dateB.getTime() - dateA.getTime();
+        });
+        const lastCvs = usersCanvases.splice(0, N_LAST_RECENTS);
+        setLastCanvases(() => lastCvs);
+      };
+      searchLastCanvases();
+    }, []);
+    
+
+*/
