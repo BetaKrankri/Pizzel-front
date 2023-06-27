@@ -10,6 +10,7 @@ interface InputProps {
   autocomplete?: string;
   min?: number;
   max?: number;
+  required?: boolean;
   onChange: React.ChangeEventHandler<HTMLInputElement> | undefined;
 }
 
@@ -27,6 +28,7 @@ const Input: React.FC<InputProps> = (props) => {
         onChange={props.onChange}
         min={props.min}
         max={props.max}
+        required={props.required}
       />
     </label>
   );

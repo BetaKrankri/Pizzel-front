@@ -45,7 +45,7 @@ const TesterPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!authCtx?.loggedUser && !localStorage.getItem("loggedUser")) {
+    if (!authCtx?.loggedUser.token && !localStorage.getItem("loggedUser")) {
       navigate("/login");
     }
   }, [authCtx?.loggedUser, navigate]);
@@ -62,16 +62,26 @@ const TesterPage = () => {
         <p>{authCtx?.loggedUser?.displayName}</p>
         <p>{authCtx?.loggedUser?.email}</p>
         <p className="break-words">{authCtx?.loggedUser?.token}</p>
+        <div className="flex gap-2">
+          <button
+            className="bg-emerald-800 p-2 ring ring-green-400 w-fit"
+            onClick={() => {
+              localStorage.removeItem("loggedUser");
+              authCtx?.updateLoggedUser(() => ({ token: "" }));
+            }}
+          >
+            Logout
+          </button>
 
-        <button
-          className="bg-emerald-800 p-2 ring ring-stone-400 w-fit"
-          onClick={() => {
-            localStorage.removeItem("loggedUser");
-            authCtx?.setLoggedUser(() => undefined);
-          }}
-        >
-          Logout
-        </button>
+          <button
+            className="bg-amber-800 p-2 ring ring-yellow-400 w-fit"
+            onClick={() => {
+              navigate("/editor");
+            }}
+          >
+            Go to Editor Page
+          </button>
+        </div>
       </div>
       {/* Start Portfolio Panel */}
 

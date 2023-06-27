@@ -5,7 +5,7 @@ export interface User {
   displayName?: string;
   email?: string;
   portfolios?: Array<Portfolio>;
-  canvases?: Array<Canvas>; //
+  // canvases?: Array<Canvas>; //
 }
 export interface Canvas {
   id: string;

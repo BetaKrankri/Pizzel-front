@@ -26,8 +26,14 @@ const RegisterPage = () => {
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // Verificador del formulario
   useEffect(() => {
+    if (authCtx?.loggedUser.token && localStorage.getItem("loggedUser")) {
+      navigate("/editor");
+    }
+  }, [authCtx?.loggedUser, navigate]);
+
+  useEffect(() => {
+    // Verificador del formulario
     let verifError = "";
     if (form.confirmedPass !== form.password)
       verifError = "The confirmation password is not the same";
@@ -48,7 +54,7 @@ const RegisterPage = () => {
         newUser.email = form.email;
         const rootPortfolio = await createPortfolio(newUser, "root");
         newUser.portfolios = [rootPortfolio];
-        authCtx?.setLoggedUser(() => newUser);
+        authCtx?.updateLoggedUser(newUser);
         localStorage.setItem("loggedUser", JSON.stringify(newUser));
         navigate("/editor");
         console.log(newUser);

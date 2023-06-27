@@ -20,7 +20,7 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (authCtx?.loggedUser && localStorage.getItem("loggedUser")) {
+    if (authCtx?.loggedUser.token && localStorage.getItem("loggedUser")) {
       navigate("/editor");
     }
   }, [authCtx?.loggedUser, navigate]);
@@ -32,7 +32,7 @@ const LoginPage: React.FC = () => {
       try {
         const newLoggedUser = await loginUser(form);
         newLoggedUser.email = form.email;
-        authCtx?.setLoggedUser(() => ({ ...newLoggedUser }));
+        authCtx?.updateLoggedUser(newLoggedUser);
         localStorage.setItem("loggedUser", JSON.stringify(newLoggedUser));
         // console.log(newLoggedUser);
         navigate("/editor");
