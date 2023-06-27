@@ -10,7 +10,7 @@ export const AppContext = createContext<IAppContext | undefined>(undefined);
 export const AppContextProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const [isMenuActive, setIsMenuActive] = useState(true);
+  const [isMenuActive, setIsMenuActive] = useState(false);
 
   const AppCtxVal: IAppContext = { isMenuActive, setIsMenuActive };
 
