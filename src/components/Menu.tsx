@@ -38,7 +38,7 @@ const Menu = () => {
   const renderMenuForm = () => {
     switch (selectedTab) {
       case "files":
-        return <FilesForm />;
+        return <FilesForm setSelectedTab={setSelectedTab} />;
         break;
       case "recents":
         return <RecentsForm />;
