@@ -28,7 +28,7 @@ const Menu = () => {
         return <FilesForm setSelectedTab={setSelectedTab} />;
         break;
       case "recents":
-        return <RecentsForm />;
+        return <RecentsForm setSelectedTab={setSelectedTab} />;
         break;
       case "newcanvas":
         return <NewCanvasForm />;
