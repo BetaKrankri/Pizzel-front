@@ -22,7 +22,7 @@ export interface Portfolio {
   userId: string;
   updatedAt: Date;
   createdAt: Date;
-  canvases: Array<Canvas>;
+  canvases?: Array<Canvas>;
 }
 
 // Portfolios functions
@@ -64,8 +64,8 @@ export async function getPortfolio(
 export async function createPortfolio(
   user: User | undefined,
   portfolioName: string
-): Promise<Portfolio> {
-  if (!portfolioName) throw new Error("No portfolioName  provided");
+): Promise<Portfolio | undefined> {
+  if (!portfolioName) return;
   const createPortfolioResponse = await axios
     .post(
       "http://localhost:3000/api/portfolio",
@@ -141,7 +141,7 @@ export async function createCanvas(
   if (!canvasName) throw new Error("Not canvaName provided");
   if (!portfolioId) throw new Error("Not portfolioId provided");
 
-  const canvaCreated = await axios
+  const canvaCreated: Canvas = await axios
     .post(
       "http://localhost:3000/api/canvas/",
       {
@@ -245,4 +245,16 @@ export async function loginUser(loginInfo: {
       throw new Error(error);
     });
   return loggedUser;
+}
+
+// getFiles
+export async function getFiles(user: User | undefined): Promise<Portfolio[]> {
+  if (!user?.token) return [];
+  const portfolios = await getAllPortfolios(user);
+  const files: Portfolio[] = [];
+  for (const portfolio of portfolios) {
+    const portfolioInfo = await getPortfolio(user, portfolio.id);
+    files.push(portfolioInfo);
+  }
+  return files;
 }

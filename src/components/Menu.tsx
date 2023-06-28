@@ -7,8 +7,6 @@ import NewCanvasForm from "./form-components/NewCanvaForm";
 import RecentsForm from "./form-components/RecentsForm";
 import { AppContext } from "../contexts/AppContext";
 import { useNavigate } from "react-router-dom";
-import { getAllPortfolios } from "../utils/api";
-import { AuthContext } from "../contexts/AuthContext";
 import burgerIcon from "../assets/burgerIcon.png";
 
 const TABS = {
@@ -21,19 +19,8 @@ const TABS = {
 const Menu = () => {
   const [selectedTab, setSelectedTab] = useState<keyof typeof TABS>("files");
   const appCtx = useContext(AppContext);
-  const authCtx = useContext(AuthContext);
   //
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const syncPortfolios = () => {
-      getAllPortfolios(authCtx?.loggedUser).then((portfolios) => {
-        authCtx?.updateLoggedUser((lu) => ({ ...lu, portfolios: portfolios }));
-      });
-    };
-
-    syncPortfolios();
-  }, []);
 
   const renderMenuForm = () => {
     switch (selectedTab) {
@@ -67,7 +54,7 @@ const Menu = () => {
       </button>
       {appCtx?.isMenuActive && (
         <div
-          className="FogBackground absolute z-10 top-0 left-0 right-0 bottom-0 bg-amber-500/20 flex justify-center items-center"
+          className="FogBackground absolute z-10 top-0 left-0 right-0 bottom-0 bg-stone-700/70 flex justify-center items-center"
           //
           // TODO: ** Quitar este onClick y ponerlo en un boton a fuera del menu ....
           //

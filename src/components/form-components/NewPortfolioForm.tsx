@@ -12,12 +12,11 @@ const NewPortfolioForm = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    //TODO Crear portfolio
+    // TODO: Verificar que el nombre no se repita en la lista de Portfolios
     createPortfolio(authCtx?.loggedUser, form)
       .then((newPortfolio) => {
         const portfolios = authCtx?.loggedUser.portfolios || [];
         newPortfolio && portfolios.push(newPortfolio);
-
         authCtx?.updateLoggedUser((lu) => ({
           ...lu,
           portfolios: [...portfolios],
@@ -27,7 +26,6 @@ const NewPortfolioForm = () => {
         setForm("");
         setIsOpen(false);
       });
-    //TODO: actualizar el estado del contexto. (Estaria padre usar un Reducer)
   };
 
   return (
@@ -43,11 +41,11 @@ const NewPortfolioForm = () => {
       {/* Formulario secundario */}
       <div
         className={`absolute top-0 bottom-0 flex items-center justify-center ${
-          isOpen && "bg-slate-800/60 left-0 w-full"
+          isOpen && "bg-slate-800/70 left-0 w-full"
         } ${
           !isOpen &&
           "bg-slate-300/10 left-full w-full rounded-tl-3xl rounded-bl-3xl"
-        } transition-all duration-500 ease-linear`}
+        } transition-all duration-150 ease-linear`}
         onClick={() => setIsOpen(false)}
       >
         <form
@@ -64,7 +62,7 @@ const NewPortfolioForm = () => {
           >
             <img src={closeIcon} alt="close" className="w-4" />
           </button>
-          <h1 className="text-xl font-host text-center mb-4">
+          <h1 className="text-2xl font-host text-center mb-4">
             Create Portfolio
           </h1>
           <div className="flex flex-col gap-5">
