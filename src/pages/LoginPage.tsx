@@ -33,7 +33,7 @@ const LoginPage: React.FC = () => {
         const newLoggedUser = await loginUser(form);
         newLoggedUser.email = form.email;
         authCtx?.updateLoggedUser(newLoggedUser);
-        localStorage.setItem("loggedUser", JSON.stringify(newLoggedUser));
+        // localStorage.setItem("loggedUser", JSON.stringify(newLoggedUser));
         // console.log(newLoggedUser);
         navigate("/editor");
       } catch (error) {

@@ -12,6 +12,7 @@ import {
   getAllCanvases,
   getAllPortfolios,
   getCanvas,
+  getFiles,
   getPortfolio,
   loginUser,
   updateCanvas,
@@ -21,7 +22,10 @@ import Input from "../components/form-components/Input";
 import { useNavigate } from "react-router-dom";
 
 const TesterPage = () => {
-  const [response, setResponse] = useState({ APIfunction: "", res: {} });
+  const [response, setResponse] = useState({
+    APIfunction: "",
+    res: {} || undefined,
+  });
   const [input1, setInput1] = useState("");
   const [input2, setInput2] = useState("");
   const [input3, setInput3] = useState("");
@@ -80,6 +84,18 @@ const TesterPage = () => {
             }}
           >
             Go to Editor Page
+          </button>
+          <button
+            className="bg-rose-800 p-2 ring ring-red-400 w-fit"
+            onClick={async () => {
+              const files = await getFiles(authCtx?.loggedUser);
+              setResponse(() => ({
+                APIfunction: "getFiles",
+                res: files,
+              }));
+            }}
+          >
+            getFiles
           </button>
         </div>
       </div>

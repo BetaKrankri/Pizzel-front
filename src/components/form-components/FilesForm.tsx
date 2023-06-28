@@ -2,8 +2,14 @@ import { useContext } from "react";
 import CanvasButton from "./CanvasButton";
 import PortfolioButton from "./PortfolioButton";
 import { AuthContext } from "../../contexts/AuthContext";
+import newCanvasIcon from "../../assets/newCanvasIcon.png";
+import NewPortfolioForm from "./NewPortfolioForm";
 
-function FilesForm() {
+const FilesForm: React.FC<{
+  setSelectedTab: React.Dispatch<
+    React.SetStateAction<"files" | "recents" | "newcanvas" | "profile">
+  >;
+}> = ({ setSelectedTab }) => {
   const authCtx = useContext(AuthContext);
   const filteredPortfolios = authCtx?.loggedUser.portfolios?.filter(
     (portfolio) => portfolio.name !== "root"
@@ -13,7 +19,7 @@ function FilesForm() {
   )[0]?.canvases;
 
   return (
-    <div className="FilesForm bg-slate-800 w-full h-full flex flex-col gap-3 p-3 transition-all">
+    <div className="FilesForm bg-slate-800 w-full h-full flex flex-col gap-3 p-3 transition-all relative">
       <div className="px-1">
         <h1 className="text-4xl font-poppins font-light">Files</h1>
       </div>
@@ -29,8 +35,17 @@ function FilesForm() {
           <CanvasButton canvas={canvas} key={canvas.id} />
         ))}
       </div>
+      <div className="flex gap-2 w-full justify-end">
+        <button
+          className="p-4 rounded bg-amber-900 border-amber-900 border hover:bg-amber-800 active:border-amber-500 transition-all"
+          onClick={() => setSelectedTab("newcanvas")}
+        >
+          <img src={newCanvasIcon} alt="addCanvas" className="w-8" />
+        </button>
+        <NewPortfolioForm />
+      </div>
     </div>
   );
-}
+};
 
 export default FilesForm;

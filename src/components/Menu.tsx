@@ -7,8 +7,7 @@ import NewCanvasForm from "./form-components/NewCanvaForm";
 import RecentsForm from "./form-components/RecentsForm";
 import { AppContext } from "../contexts/AppContext";
 import { useNavigate } from "react-router-dom";
-import { getAllPortfolios } from "../utils/api";
-import { AuthContext } from "../contexts/AuthContext";
+import burgerIcon from "../assets/burgerIcon.png";
 
 const TABS = {
   files: "Files",
@@ -20,24 +19,13 @@ const TABS = {
 const Menu = () => {
   const [selectedTab, setSelectedTab] = useState<keyof typeof TABS>("files");
   const appCtx = useContext(AppContext);
-  const authCtx = useContext(AuthContext);
   //
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const syncPortfolios = () => {
-      getAllPortfolios(authCtx?.loggedUser).then((portfolios) => {
-        authCtx?.updateLoggedUser((lu) => ({ ...lu, portfolios: portfolios }));
-      });
-    };
-
-    syncPortfolios();
-  }, []);
 
   const renderMenuForm = () => {
     switch (selectedTab) {
       case "files":
-        return <FilesForm />;
+        return <FilesForm setSelectedTab={setSelectedTab} />;
         break;
       case "recents":
         return <RecentsForm />;
@@ -55,44 +43,56 @@ const Menu = () => {
   };
 
   return (
-    <div
-      className="FogBackground absolute z-10 w-full h-full bg-stone-500/20 flex justify-center items-center"
-      //
-      // TODO: ** Quitar este onClick y ponerlo en un boton a fuera del menu ....
-      //
-      onClick={() => {
-        appCtx?.setIsMenuActive(false);
-      }}
-    >
-      <div
-        className="Menu rounded overflow-hidden flex shadow-xl"
-        onClick={(e) => e.stopPropagation()}
+    <>
+      <button
+        className="hover:bg-slate-700 active:ring-1 ring-slate-400 p-1 rounded-sm"
+        onClick={() => {
+          appCtx?.setIsMenuActive((ima) => !ima);
+        }}
       >
-        <div className="Tab flex flex-col bg-slate-950">
-          {Object.entries(TABS).map((tab) => (
-            <TabButton
-              key={tab[0]}
-              label={tab[1]}
-              isActive={selectedTab === tab[0]}
-              onClick={() => {
-                setSelectedTab(tab[0] as keyof typeof TABS);
-              }}
-            />
-          ))}
-          {/* /// */}
-          <TabButton
-            label={"Tester Page"}
-            isActive={false}
-            onClick={() => {
-              navigate("/test");
-            }}
-          />
+        <img src={burgerIcon} alt="menu button" className="w-5" />
+      </button>
+      {appCtx?.isMenuActive && (
+        <div
+          className="FogBackground absolute z-10 top-0 left-0 right-0 bottom-0 bg-stone-700/70 flex justify-center items-center"
+          //
+          // TODO: ** Quitar este onClick y ponerlo en un boton a fuera del menu ....
+          //
+          onClick={() => {
+            appCtx?.setIsMenuActive(false);
+          }}
+        >
+          <div
+            className="Menu rounded overflow-hidden flex shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="Tab flex flex-col bg-slate-950">
+              {Object.entries(TABS).map((tab) => (
+                <TabButton
+                  key={tab[0]}
+                  label={tab[1]}
+                  isActive={selectedTab === tab[0]}
+                  onClick={() => {
+                    setSelectedTab(tab[0] as keyof typeof TABS);
+                  }}
+                />
+              ))}
+              {/* /// */}
+              <TabButton
+                label={"Tester Page"}
+                isActive={false}
+                onClick={() => {
+                  navigate("/test");
+                }}
+              />
+            </div>
+            <div className="Form  ">
+              <div className="h-full w-full ">{renderMenuForm()}</div>
+            </div>
+          </div>
         </div>
-        <div className="Form  ">
-          <div className="h-full w-full ">{renderMenuForm()}</div>
-        </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 
