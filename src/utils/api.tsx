@@ -4,14 +4,14 @@ export interface User {
   token: string;
   displayName?: string;
   email?: string;
-  portfolios?: Array<Portfolio>;
+  portfolios?: Array<Portfolio> | [];
   // canvases?: Array<Canvas>; //
 }
 export interface Canvas {
   id: string;
   name: string;
   portfolioId: string;
-  sketch: unknown;
+  sketch: undefined | Array<Array<string>>;
   userId: string;
   updatedAt: Date;
   createdAt: Date;
@@ -212,7 +212,7 @@ export async function updateCanvas(
   return updatedCanvas;
 }
 
-// user functions
+// User Functions
 export async function createUser(registerInfo: {
   displayName: string;
   email: string;
@@ -247,7 +247,7 @@ export async function loginUser(loginInfo: {
   return loggedUser;
 }
 
-// getFiles
+// Utils
 export async function getFiles(user: User | undefined): Promise<Portfolio[]> {
   if (!user?.token) return [];
   const portfolios = await getAllPortfolios(user);
@@ -257,4 +257,13 @@ export async function getFiles(user: User | undefined): Promise<Portfolio[]> {
     files.push(portfolioInfo);
   }
   return files;
+}
+
+export function newSketch(w: number, h: number) {
+  const sketch = [];
+  for (let i = 0; i < h; i++) {
+    const row = Array(w);
+    sketch.push(row);
+  }
+  return sketch;
 }

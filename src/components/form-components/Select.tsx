@@ -1,13 +1,15 @@
 import React from "react";
 
 interface SelectProps {
-  value: string | readonly string[] | undefined;
+  value?: string;
   label?: string;
   labelStyle?: string;
   selectStyle?: string;
   required?: boolean;
   onChange: React.ChangeEventHandler<HTMLSelectElement> | undefined;
-  options: string[] | undefined;
+  selected?: boolean;
+  placeholder?: string;
+  children?: React.ReactNode;
 }
 
 const Select: React.FC<SelectProps> = (props) => {
@@ -15,17 +17,18 @@ const Select: React.FC<SelectProps> = (props) => {
     <label className={`Select flex flex-col gap-1 ${props.labelStyle} w-full`}>
       {props.label && <p>{props.label}</p>}
       <select
-        required={props.required}
-        value={props.value}
         className={`gap rounded-md px-4 py-2 bg-stone-700 ring-stone-600
         active:ring-stone-800 w-full ${props.selectStyle}`}
+        value={props.value || ""}
+        required={props.required}
         onChange={props.onChange}
       >
-        {props.options?.map((option, i) => (
-          <option key={i} value={option} className="">
-            {option}
+        {props.placeholder && (
+          <option disabled value="">
+            {props.placeholder}
           </option>
-        ))}
+        )}
+        {props.children}
       </select>
     </label>
   );

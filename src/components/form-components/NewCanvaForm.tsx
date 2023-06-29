@@ -1,8 +1,8 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import Input from "./Input";
 import Select from "./Select";
-import { Portfolio, getAllPortfolios } from "../../utils/api";
 import { AuthContext } from "../../contexts/AuthContext";
+import { createCanvas, newSketch, updateCanvas } from "../../utils/api";
 
 const PRESETS_SIZES = [
   { w: 16, h: 16 },
@@ -14,33 +14,58 @@ const PRESETS_SIZES = [
   { w: 300, h: 300 },
 ];
 
+interface FormData {
+  canvasName: string;
+  width: number;
+  height: number;
+  portfolioId: any;
+}
+
+const initialForm = {
+  canvasName: "",
+  width: 16,
+  height: 16,
+  portfolioId: "",
+};
+
 function NewCanvasForm() {
-  const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
-  const [form, setForm] = useState<{
-    canvasName: string;
-    width: number;
-    height: number;
-    portfolio: any;
-  }>({
-    canvasName: "",
-    width: 16,
-    height: 16,
-    portfolio: "",
-  });
+  const [form, setForm] = useState<FormData>(initialForm);
   const authCtx = useContext(AuthContext);
+  const portfoliosList = authCtx?.loggedUser.portfolios || [];
 
-  useEffect(() => {
-    const getPortfoliosOptionsList = async () => {
-      const usersPortfolios = await getAllPortfolios(authCtx?.loggedUser);
-      setPortfolios(usersPortfolios);
-    };
-
-    getPortfoliosOptionsList();
-  }, []);
-
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: Agregar canvas
+    createCanvas(authCtx?.loggedUser, form.portfolioId, form.canvasName)
+      // crea un nuevo Canvas con sketch
+      .then((newCanvas) =>
+        updateCanvas(authCtx?.loggedUser, newCanvas.id, {
+          name: newCanvas.name,
+          sketch: newSketch(form.width, form.height),
+        })
+      )
+      .then((newCanvas) => {
+        // Actualiza los portfolios del usuario loggeado.
+        const updatedFiles = authCtx?.loggedUser.portfolios?.map(
+          (portfolio) => {
+            if (portfolio.id !== newCanvas.portfolioId) {
+              return portfolio;
+            } else {
+              return {
+                ...portfolio,
+                canvases: [...(portfolio?.canvases || []), newCanvas],
+              };
+            }
+          }
+        );
+
+        authCtx?.updateLoggedUser((lu) => ({
+          ...lu,
+          portfolios: updatedFiles,
+        }));
+      })
+      .then(() => setForm(initialForm))
+      // .then(Abrir el canvas)
+      .catch((error) => console.error(error));
   };
 
   return (
@@ -66,7 +91,7 @@ function NewCanvasForm() {
           }
         />
 
-        <div className="flex gap-2">
+        <div className="SizeForm flex gap-2">
           <Input
             type="number"
             label="Width"
@@ -109,7 +134,7 @@ function NewCanvasForm() {
           />
         </div>
 
-        <div className="flex flex-col gap-1">
+        <div className="PresetsSection flex flex-col gap-1">
           <p>Presets</p>
           <div className="w-full overflow-x-auto flex gap-2 scrollbar-hide">
             {PRESETS_SIZES.map((ps, i) => (
@@ -130,12 +155,20 @@ function NewCanvasForm() {
         {/* TODO: Obtener las opciones de portafolio */}
         <Select
           required
-          label="Select Portfolio"
-          options={portfolios.map((portfolio) => portfolio.name)}
-          onChange={(e) => {
-            console.log(e.target.value);
-          }}
-        />
+          label="Portfolio"
+          placeholder="-- Select a Portfolio --"
+          value={form.portfolioId}
+          onChange={(e) =>
+            setForm((f) => ({ ...f, portfolioId: e.target.value }))
+          }
+        >
+          {portfoliosList.map((portfolio) => (
+            <option key={portfolio.id} value={portfolio.id}>
+              {portfolio.name}
+            </option>
+          ))}
+        </Select>
+
         <div />
         <button className="p-4 rounded bg-amber-900 border-amber-900 border hover:bg-amber-800 active:border-amber-500 ">
           Create Canvas

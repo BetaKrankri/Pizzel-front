@@ -4,7 +4,7 @@ import CanvasButton from "./CanvasButton";
 import { Canvas } from "../../utils/api";
 import newCanvasIcon from "../../assets/newCanvasIcon.png";
 
-const N_LAST_RECENTS = 5;
+const N_LAST_RECENTS = 6;
 
 const RecentsForm: React.FC<{
   setSelectedTab: React.Dispatch<
@@ -21,7 +21,7 @@ const RecentsForm: React.FC<{
     const dateB = new Date(cb.updatedAt);
     return dateB.getTime() - dateA.getTime();
   });
-  const lastCvs = allCanvases?.splice(0, N_LAST_RECENTS - 1);
+  const lastCvs = allCanvases?.splice(0, N_LAST_RECENTS);
 
   return (
     <div className="RecentsForm bg-slate-800 w-full h-full flex flex-col gap-3 p-3 transition-all duration-500">
