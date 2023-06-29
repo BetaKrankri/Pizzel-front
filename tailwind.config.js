@@ -2,9 +2,16 @@
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        jost: ["Jost"],
+        poppins: ["Poppins"],
+        source: ['"Source Code Pro"'],
+      },
+    },
   },
   plugins: [
+    require("tailwind-scrollbar-hide"),
     require("@tailwindcss/forms")({
       strategy: "base", // only generate global styles
     }),

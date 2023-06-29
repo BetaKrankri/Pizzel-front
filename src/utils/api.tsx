@@ -4,14 +4,14 @@ export interface User {
   token: string;
   displayName?: string;
   email?: string;
-  portfolios?: Array<Portfolio>;
-  canvases?: Array<Canvas>; //
+  portfolios?: Array<Portfolio> | [];
+  // canvases?: Array<Canvas>; //
 }
 export interface Canvas {
   id: string;
   name: string;
   portfolioId: string;
-  sketch: unknown;
+  sketch: undefined | Array<Array<string>>;
   userId: string;
   updatedAt: Date;
   createdAt: Date;
@@ -22,14 +22,14 @@ export interface Portfolio {
   userId: string;
   updatedAt: Date;
   createdAt: Date;
-  canvases: Array<Canvas>;
+  canvases?: Array<Canvas>;
 }
 
 // Portfolios functions
 export async function getAllPortfolios(
   user: User | undefined
 ): Promise<Portfolio[]> {
-  if (!user?.email) throw new Error("No email provided");
+  if (!user?.email) return [];
   const userPortfolios = await axios
     .get("http://localhost:3000/api/portfolio", {
       headers: { Authorization: `Bearer ${user?.token}` },
@@ -37,7 +37,9 @@ export async function getAllPortfolios(
     })
     .then((res) => res.data.data)
     .catch((error) => {
-      throw new Error(error);
+      console.error(error);
+      return [];
+      // throw new Error(error);
     });
 
   return userPortfolios;
@@ -62,8 +64,8 @@ export async function getPortfolio(
 export async function createPortfolio(
   user: User | undefined,
   portfolioName: string
-): Promise<Portfolio> {
-  if (!portfolioName) throw new Error("No portfolioName  provided");
+): Promise<Portfolio | undefined> {
+  if (!portfolioName) return;
   const createPortfolioResponse = await axios
     .post(
       "http://localhost:3000/api/portfolio",
@@ -124,7 +126,9 @@ export async function getAllCanvases(
     })
     .then((res) => res.data.data)
     .catch((error) => {
-      throw new Error(error);
+      console.error(error);
+      return [];
+      // throw new Error(error);
     });
   return allCanvases;
 }
@@ -137,7 +141,7 @@ export async function createCanvas(
   if (!canvasName) throw new Error("Not canvaName provided");
   if (!portfolioId) throw new Error("Not portfolioId provided");
 
-  const canvaCreated = await axios
+  const canvaCreated: Canvas = await axios
     .post(
       "http://localhost:3000/api/canvas/",
       {
@@ -208,7 +212,7 @@ export async function updateCanvas(
   return updatedCanvas;
 }
 
-// user functions
+// User Functions
 export async function createUser(registerInfo: {
   displayName: string;
   email: string;
@@ -241,4 +245,25 @@ export async function loginUser(loginInfo: {
       throw new Error(error);
     });
   return loggedUser;
+}
+
+// Utils
+export async function getFiles(user: User | undefined): Promise<Portfolio[]> {
+  if (!user?.token) return [];
+  const portfolios = await getAllPortfolios(user);
+  const files: Portfolio[] = [];
+  for (const portfolio of portfolios) {
+    const portfolioInfo = await getPortfolio(user, portfolio.id);
+    files.push(portfolioInfo);
+  }
+  return files;
+}
+
+export function newSketch(w: number, h: number) {
+  const sketch = [];
+  for (let i = 0; i < h; i++) {
+    const row = Array(w);
+    sketch.push(row);
+  }
+  return sketch;
 }
