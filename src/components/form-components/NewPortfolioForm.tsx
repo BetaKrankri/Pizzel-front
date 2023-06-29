@@ -1,16 +1,31 @@
 import newPortfolioIcon from "../../assets/newPortfolioIcon.png";
 import closeIcon from "../../assets/closeIcon.png";
-import { useState, useContext } from "react";
+import { useState, useContext, FormEvent, useRef, useEffect } from "react";
 import Input from "./Input";
 import { createPortfolio } from "../../utils/api";
 import { AuthContext } from "../../contexts/AuthContext";
 
 const NewPortfolioForm = () => {
   const authCtx = useContext(AuthContext);
+  const formRef = useRef<HTMLFormElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [form, setForm] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (formRef.current && !formRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
+
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     // TODO: Verificar que el nombre no se repita en la lista de Portfolios
     createPortfolio(authCtx?.loggedUser, form)
@@ -30,24 +45,22 @@ const NewPortfolioForm = () => {
 
   return (
     <>
-      <div className="transition-all duration-500">
-        <button
-          className="p-4 rounded bg-amber-900 border-amber-900 border hover:bg-amber-800 active:border-amber-500 transition-all"
-          onClick={() => setIsOpen(true)}
-        >
-          <img src={newPortfolioIcon} alt="addCanvas" className="w-8" />
-        </button>
-      </div>
+      <button
+        className="p-4 rounded bg-amber-900 border-amber-900 border hover:bg-amber-800 active:border-amber-500 transition-all"
+        onClick={() => setIsOpen(true)}
+      >
+        <img src={newPortfolioIcon} alt="addCanvas" className="w-8" />
+      </button>
       {/* Formulario secundario */}
       <div
-        className={`absolute top-0 bottom-0 flex items-center justify-center w-full ${
+        className={`Fog absolute top-0 bottom-0 flex items-center justify-center w-full ${
           isOpen && "bg-slate-800/70 left-0 "
         } ${
           !isOpen && "bg-slate-300/10 left-full rounded-tl-3xl rounded-bl-3xl"
         } transition-all duration-150 ease-linear`}
-        onClick={() => setIsOpen(false)}
       >
         <form
+          ref={formRef}
           className="bg-slate-950 p-4 pb-6 flex flex-col  rounded font-jost w-10/12"
           onSubmit={handleSubmit}
           onClick={(e) => e.stopPropagation()}
