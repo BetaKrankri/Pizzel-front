@@ -18,7 +18,7 @@ interface FormData {
   canvasName: string;
   width: number;
   height: number;
-  portfolioId: any;
+  portfolioId: string;
 }
 
 const initialForm = {
@@ -69,7 +69,7 @@ function NewCanvasForm() {
   };
 
   return (
-    <div className="NewCanvasForm bg-slate-800 w-full h-full flex flex-col gap-3 p-3 transition-all">
+    <div className="NewCanvasForm bg-slate-800 w-full h-full flex flex-col gap-3 px-3 py-5 transition-all">
       <div className="px-1">
         <h1 className="text-4xl font-poppins font-light">New Canvas</h1>
       </div>
@@ -170,6 +170,8 @@ function NewCanvasForm() {
         </Select>
 
         <div />
+        <div />
+
         <button className="p-4 rounded bg-amber-900 border-amber-900 border hover:bg-amber-800 active:border-amber-500 ">
           Create Canvas
         </button>

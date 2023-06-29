@@ -24,7 +24,7 @@ const RecentsForm: React.FC<{
   const lastCvs = allCanvases?.splice(0, N_LAST_RECENTS);
 
   return (
-    <div className="RecentsForm bg-slate-800 w-full h-full flex flex-col gap-3 p-3 transition-all duration-500">
+    <div className="RecentsForm bg-slate-800 w-full h-full flex flex-col gap-3 px-3 py-5 transition-all duration-500">
       <div className="px-1">
         <h1 className="text-4xl font-poppins font-light">Last edited</h1>
       </div>
