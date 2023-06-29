@@ -120,11 +120,10 @@ function getUpdateStatusString(dateString: Date): string {
     return "updated today";
   }
 }
-
+/*
 function getYMDHMFormat(dateString: Date): string {
   const date = new Date(dateString);
-
   return `${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
 }
-
+*/
 export default CanvasButton;

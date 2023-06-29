@@ -6,7 +6,6 @@ import ProfileForm from "./form-components/ProfileForm";
 import NewCanvasForm from "./form-components/NewCanvaForm";
 import RecentsForm from "./form-components/RecentsForm";
 import { AppContext } from "../contexts/AppContext";
-import { useNavigate } from "react-router-dom";
 import burgerIcon from "../assets/burgerIcon.png";
 
 const TABS = {
@@ -20,8 +19,6 @@ const Menu = () => {
   const [selectedTab, setSelectedTab] = useState<keyof typeof TABS>("files");
   const appCtx = useContext(AppContext);
   //
-  const navigate = useNavigate();
-
   const renderMenuForm = () => {
     switch (selectedTab) {
       case "files":
@@ -52,7 +49,7 @@ const Menu = () => {
       >
         <img src={burgerIcon} alt="menu button" className="w-5" />
       </button>
-      {appCtx?.isMenuActive && (
+      {(appCtx?.isMenuActive || !appCtx?.currentCanvas) && (
         <div
           className="FogBackground absolute z-10 top-0 left-0 right-0 bottom-0 bg-stone-700/70 flex justify-center items-center"
           //
@@ -77,14 +74,14 @@ const Menu = () => {
                   }}
                 />
               ))}
-              {/* /// */}
+              {/* /// 
               <TabButton
                 label={"Tester Page"}
                 isActive={false}
                 onClick={() => {
                   navigate("/test");
                 }}
-              />
+              />*/}
             </div>
             <div className="Form  ">
               <div className="h-full w-full ">{renderMenuForm()}</div>
