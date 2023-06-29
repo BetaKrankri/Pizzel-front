@@ -40,11 +40,10 @@ const NewPortfolioForm = () => {
       </div>
       {/* Formulario secundario */}
       <div
-        className={`absolute top-0 bottom-0 flex items-center justify-center ${
-          isOpen && "bg-slate-800/70 left-0 w-full"
+        className={`absolute top-0 bottom-0 flex items-center justify-center w-full ${
+          isOpen && "bg-slate-800/70 left-0 "
         } ${
-          !isOpen &&
-          "bg-slate-300/10 left-full w-full rounded-tl-3xl rounded-bl-3xl"
+          !isOpen && "bg-slate-300/10 left-full rounded-tl-3xl rounded-bl-3xl"
         } transition-all duration-150 ease-linear`}
         onClick={() => setIsOpen(false)}
       >

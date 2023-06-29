@@ -2,11 +2,15 @@ import React from "react";
 import verticalDots from "../../assets/verticalDots.png";
 import { Canvas } from "../../utils/api";
 
-const CanvasButton: React.FC<{ canvas: Canvas }> = ({ canvas }) => {
+const CanvasButton: React.FC<{
+  canvas: Canvas;
+  onClick: React.MouseEventHandler<HTMLButtonElement> | undefined;
+}> = (props) => {
   return (
     <button
       className={`CanvasButton flex py-2 px-3 items-center justify-between
        bg-slate-800 hover:bg-slate-700 rounded border-b border-b-slate-900 shadow`}
+      onClick={props.onClick}
     >
       <div className="flex w-full  gap-3 ">
         <div className="flex justify-center items-center bg-slate-950 rounded">
@@ -15,10 +19,10 @@ const CanvasButton: React.FC<{ canvas: Canvas }> = ({ canvas }) => {
 
         <div className="flex flex-col w-full text-start justify-evenly">
           <p className="text-lg font-jost truncate">
-            {canvas?.name || "Canvas name"}
+            {props.canvas?.name || "Canvas name"}
           </p>
           <p className="text-xs font-jost">
-            {getYMDHMFormat(canvas?.updatedAt)}
+            {getYMDHMFormat(props.canvas?.updatedAt)}
           </p>
         </div>
       </div>
