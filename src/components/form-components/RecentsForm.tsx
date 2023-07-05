@@ -30,7 +30,7 @@ const RecentsForm: React.FC<{
       </div>
       <hr />
       <div
-        className={`Wrapper w-80 max-h-80 min-h-[300px] overflow-auto
+        className={`Wrapper w-full h-full max-h-96 overflow-auto
        scrollbar-hide scroll-smooth flex flex-col gap-2 shadow`}
       >
         {lastCvs?.map((canvas) => (

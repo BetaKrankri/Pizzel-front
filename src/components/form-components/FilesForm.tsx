@@ -36,7 +36,7 @@ const FilesForm: React.FC<{
             <h1 className="text-4xl font-poppins font-light">Files</h1>
           </div>
           <hr />
-          <div className="Wrapper w-80 max-h-80 min-h-[300px] overflow-auto scrollbar-hide scroll-smooth flex flex-col gap-2 shadow">
+          <div className="Wrapper w-full h-full max-h-96 overflow-auto scrollbar-hide scroll-smooth flex flex-col gap-2 shadow">
             {filteredPortfolios?.map((portfolio) => (
               <PortfolioButton
                 portfolio={portfolio}

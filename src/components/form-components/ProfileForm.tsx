@@ -10,12 +10,12 @@ function ProfileForm() {
   );
 
   return (
-    <div className="RecentsForm bg-slate-800 w-full h-full flex flex-col gap-3 px-3 py-5 transition-all duration-500">
+    <div className="ProfileForm bg-slate-800 w-full h-full flex flex-col gap-3 px-3 py-5 transition-all duration-500">
       <div className="px-1">
         <h1 className="text-4xl font-poppins font-light">Profile</h1>
       </div>
       <hr />
-      <div className="Wrapper w-80 max-h-80 min-h-[150px] flex flex-col gap-4 px-6 py-4">
+      <div className="Wrapper max-h-96 flex flex-col gap-4 px-6 py-4">
         <div className="Avatar rounded-full w-14 h-14 bg-amber-600 ring ring-slate-950"></div>
         {authCtx?.loggedUser.displayName && (
           <div className="font-jost flex flex-col gap-2">
