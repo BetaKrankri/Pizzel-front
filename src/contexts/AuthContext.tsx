@@ -36,6 +36,7 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, []);
 
+  // Al cambiar el token, se fetchean la info del usuario
   useEffect(() => {
     if (!loggedUser.token) return;
     getFiles(loggedUser).then((files) => {

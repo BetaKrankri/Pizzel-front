@@ -3,6 +3,7 @@ import Input from "./Input";
 import Select from "./Select";
 import { AuthContext } from "../../contexts/AuthContext";
 import { createCanvas, newSketch, updateCanvas } from "../../utils/api";
+import { AppContext } from "../../contexts/AppContext";
 
 const PRESETS_SIZES = [
   { w: 16, h: 16 },
@@ -31,6 +32,8 @@ const initialForm = {
 function NewCanvasForm() {
   const [form, setForm] = useState<FormData>(initialForm);
   const authCtx = useContext(AuthContext);
+  const appCtx = useContext(AppContext);
+
   const portfoliosList = authCtx?.loggedUser.portfolios || [];
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -62,21 +65,21 @@ function NewCanvasForm() {
           ...lu,
           portfolios: updatedFiles,
         }));
+        setForm(initialForm);
+        appCtx?.setCurrentCanvas(newCanvas);
       })
-      .then(() => setForm(initialForm))
       // .then(Abrir el canvas)
       .catch((error) => console.error(error));
   };
 
   return (
-    <div className="NewCanvasForm bg-slate-800 w-full h-full flex flex-col gap-3 px-3 py-5 transition-all">
+    <div className="NewCanvasForm bg-slate-800 w-full h-full flex flex-col gap-3 px-3 py-5 transition-all ">
       <div className="px-1">
         <h1 className="text-4xl font-poppins font-light">New Canvas</h1>
       </div>
       <hr />
       <form
-        className={`Wrapper min-h-[200px] overflow-auto w-80
-       scrollbar-hide scroll-smooth flex flex-col gap-3 shadow font-jost`}
+        className={`Wrapper overflow-auto w-full h-full scrollbar-hide scroll-smooth flex flex-col gap-3 shadow font-jost`}
         onSubmit={handleSubmit}
       >
         <Input
@@ -134,9 +137,9 @@ function NewCanvasForm() {
           />
         </div>
 
-        <div className="PresetsSection flex flex-col gap-1">
+        <div className="PresetsSection flex flex-col gap-1 ">
           <p>Presets</p>
-          <div className="w-full overflow-x-auto flex gap-2 scrollbar-hide">
+          <div className="overflow-x-auto flex gap-2 scrollbar-hide max-w-sm">
             {PRESETS_SIZES.map((ps, i) => (
               <button
                 key={i}

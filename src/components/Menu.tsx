@@ -9,10 +9,10 @@ import { AppContext } from "../contexts/AppContext";
 import burgerIcon from "../assets/burgerIcon.png";
 
 const TABS = {
+  profile: "Profile",
   files: "Files",
   recents: "Recents",
   newcanvas: "New Canvas",
-  profile: "Profile",
 };
 
 const Menu = () => {
@@ -51,28 +51,31 @@ const Menu = () => {
       </button>
       {(appCtx?.isMenuActive || !appCtx?.currentCanvas) && (
         <div
-          className="FogBackground absolute z-10 top-0 left-0 right-0 bottom-0 bg-stone-700/70 flex justify-center items-center"
-          //
+          className="Fog absolute z-10 top-16 left-0 right-0 bottom-0 bg-stone-700/70 flex justify-center items-center"
           // TODO: ** Quitar este onClick y ponerlo en un boton a fuera del menu ....
-          //
           onClick={() => {
             appCtx?.setIsMenuActive(false);
           }}
         >
           <div
-            className="Menu rounded overflow-hidden flex shadow-xl"
+            className="Menu rounded overflow-hidden flex flex-col sm:flex-row shadow-xl w-full h-full sm:w-auto sm:h-auto "
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="Tab flex flex-col bg-slate-950">
-              {Object.entries(TABS).map((tab) => (
-                <TabButton
-                  key={tab[0]}
-                  label={tab[1]}
-                  isActive={selectedTab === tab[0]}
-                  onClick={() => {
-                    setSelectedTab(tab[0] as keyof typeof TABS);
-                  }}
-                />
+            <div className="Tab flex sm:flex-col items-center md:gap-2 sm:w-40 bg-slate-950 overflow-auto scrollbar-hide">
+              {Object.entries(TABS).map((tab, i, ar) => (
+                <>
+                  <TabButton
+                    key={tab[0]}
+                    label={tab[1]}
+                    isActive={selectedTab === tab[0]}
+                    onClick={() => {
+                      setSelectedTab(tab[0] as keyof typeof TABS);
+                    }}
+                  />
+                  {i < ar.length - 1 && (
+                    <div className="Separator border border-slate-100/5 h-4/6 sm:hidden" />
+                  )}
+                </>
               ))}
               {/* /// 
               <TabButton
@@ -83,9 +86,7 @@ const Menu = () => {
                 }}
               />*/}
             </div>
-            <div className="Form  ">
-              <div className="h-full w-full ">{renderMenuForm()}</div>
-            </div>
+            <div className="w-full h-full sm:w-96">{renderMenuForm()}</div>
           </div>
         </div>
       )}
