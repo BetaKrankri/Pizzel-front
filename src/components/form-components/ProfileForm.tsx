@@ -12,7 +12,9 @@ function ProfileForm() {
   return (
     <div className="ProfileForm bg-slate-800 w-full h-full flex flex-col gap-3 px-3 py-5 transition-all duration-500">
       <div className="px-1">
-        <h1 className="text-4xl font-poppins font-light">Profile</h1>
+        <h1 className="text-2xl sm:text-4xl font-jost font-normal sm:font-light">
+          Profile
+        </h1>
       </div>
       <hr />
       <div className="Wrapper max-h-96 flex flex-col gap-4 px-6 py-4">

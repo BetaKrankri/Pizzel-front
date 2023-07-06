@@ -26,11 +26,13 @@ const RecentsForm: React.FC<{
   return (
     <div className="RecentsForm bg-slate-800 w-full h-full flex flex-col gap-3 px-3 py-5 transition-all duration-500">
       <div className="px-1">
-        <h1 className="text-4xl font-poppins font-light">Last edited</h1>
+        <h1 className="text-2xl sm:text-4xl font-jost font-normal sm:font-light">
+          Last edited
+        </h1>
       </div>
       <hr />
       <div
-        className={`Wrapper w-full h-full sm:max-h-96 overflow-auto
+        className={`Wrapper w-full h-full sm:max-h-96 sm:min-h-[208px] overflow-auto 
        scrollbar-hide scroll-smooth flex flex-col gap-2 shadow`}
       >
         {lastCvs?.map((canvas) => (

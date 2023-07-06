@@ -44,14 +44,16 @@ const Menu = () => {
       <button
         className="hover:bg-slate-700 active:ring-1 ring-slate-400 p-1 rounded-sm"
         onClick={() => {
-          appCtx?.setIsMenuActive((ima) => !ima);
+          appCtx?.setIsMenuActive((ima) =>
+            appCtx?.currentCanvas ? !ima : false
+          );
         }}
       >
         <img src={burgerIcon} alt="menu button" className="w-5" />
       </button>
       {(appCtx?.isMenuActive || !appCtx?.currentCanvas) && (
         <div
-          className="Fog absolute z-10 top-16 left-0 right-0 bottom-0 bg-stone-700/70 flex justify-center items-center"
+          className="Fog absolute z-10 top-16 left-0 right-0 bottom-0 bg-stone-700/70 flex justify-center items-center transition-all"
           // TODO: ** Quitar este onClick y ponerlo en un boton a fuera del menu ....
           onClick={() => {
             appCtx?.setIsMenuActive(false);
@@ -86,7 +88,9 @@ const Menu = () => {
                 }}
               />*/}
             </div>
-            <div className="w-full h-full sm:w-96">{renderMenuForm()}</div>
+            <div className="w-full h-full sm:w-96 overflow-scroll scrollbar-hide">
+              {renderMenuForm()}
+            </div>
           </div>
         </div>
       )}

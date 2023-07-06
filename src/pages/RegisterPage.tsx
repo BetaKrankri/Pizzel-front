@@ -128,9 +128,9 @@ const RegisterPage = () => {
         </form>
 
         <div
-          className={`bg-red-600 rounded flex justify-between w-full border-4 border-red-400 text-sm text-red-50 transition-all ${
+          className={`bg-red-600 rounded flex justify-between w-full  border-red-400 text-sm text-red-50 transition-all ${
             !error && "w-0 h-0 border-0 overflow-hidden p-0"
-          } ${error && "p-1 px-2"}`}
+          } ${error && "p-1 px-2 border-4"}`}
         >
           {error}
           <button

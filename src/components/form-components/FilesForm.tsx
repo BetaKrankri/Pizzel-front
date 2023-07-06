@@ -33,10 +33,12 @@ const FilesForm: React.FC<{
 
           {/* FilesForm */}
           <div className="px-1">
-            <h1 className="text-4xl font-poppins font-light">Files</h1>
+            <h1 className="text-2xl sm:text-4xl font-jost font-normal sm:font-light">
+              Files
+            </h1>
           </div>
           <hr />
-          <div className="Wrapper w-full h-full sm:max-h-96 overflow-auto scrollbar-hide scroll-smooth flex flex-col gap-2 shadow">
+          <div className="Wrapper w-full h-full sm:max-h-96 sm:min-h-[208px] overflow-auto scrollbar-hide scroll-smooth flex flex-col gap-2 shadow">
             {filteredPortfolios?.map((portfolio) => (
               <PortfolioButton
                 portfolio={portfolio}
@@ -60,7 +62,7 @@ const FilesForm: React.FC<{
         </div>
       )}
       {selectedPortfolio && (
-        <div className="SubFilesform flex flex-col gap-3 px-3 py-5 bottom-0 top-0 w-full bg-slate-800 transition-all duration-200 ease-linear">
+        <div className="SubFilesform flex flex-col gap-3 px-3 py-5 bottom-0 top-0 w-full h-full bg-slate-800 transition-all duration-200 ease-linear">
           <div className="px-1 flex items-center gap-2 ">
             <button
               className="w-6 hover:bg-slate-700 active:ring-1 ring-slate-400 py-1 rounded-sm"
@@ -68,12 +70,12 @@ const FilesForm: React.FC<{
             >
               <img src={leftArrowIcon} alt="back" />
             </button>
-            <h1 className="text-3xl font-poppins font-light trancated">
+            <h1 className="text-2xl sm:text-3xl font-jost font-normal sm:font-light">
               {selectedPortfolio?.name}
             </h1>
           </div>
           <hr />
-          <div className="Wrapper w-80 max-h-80 min-h-[300px] overflow-auto scrollbar-hide scroll-smooth flex flex-col gap-2 shadow">
+          <div className="Wrapper w-full h-full sm:max-h-96 sm:min-h-[208px] overflow-auto scrollbar-hide scroll-smooth flex flex-col gap-2 shadow">
             {selectedPortfolio?.canvases?.map((canvas) => (
               <CanvasButton key={canvas.id} canvas={canvas} />
             ))}

@@ -67,6 +67,7 @@ function NewCanvasForm() {
         }));
         setForm(initialForm);
         appCtx?.setCurrentCanvas(newCanvas);
+        // TODO:  Cerrar el Menu
       })
       // .then(Abrir el canvas)
       .catch((error) => console.error(error));
@@ -75,7 +76,9 @@ function NewCanvasForm() {
   return (
     <div className="NewCanvasForm bg-slate-800 w-full h-full flex flex-col gap-3 px-3 py-5 transition-all ">
       <div className="px-1">
-        <h1 className="text-4xl font-poppins font-light">New Canvas</h1>
+        <h1 className="text-2xl sm:text-4xl font-jost font-normal sm:font-light">
+          New Canvas
+        </h1>
       </div>
       <hr />
       <form
@@ -117,7 +120,7 @@ function NewCanvasForm() {
           />
           <Input
             type="number"
-            label="height"
+            label="Height"
             value={form.height}
             placeholder="16"
             min={4}
